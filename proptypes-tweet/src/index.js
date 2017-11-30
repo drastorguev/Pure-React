@@ -13,7 +13,6 @@ function Tweet({ tweet }) {
         <NameWithHandle author={tweet.author}/>
         <Time time={tweet.timestamp}/>
         <Message text={tweet.message}/>
-        <Comment author={6}/>
         <div className="buttons">
           <ReplyButton/>
           <RetweetButton count={tweet.retweets}/>
@@ -37,8 +36,6 @@ var testTweet = {
   timestamp: "2016-07-30 21:24:37"
 };
 
-
-
 function Avatar({ hash }) {
   var url = `https://www.gravatar.com/avatar/${hash}`;
   return (
@@ -57,13 +54,19 @@ function Message({ text }) {
 
 function NameWithHandle({ author }) {
   const { name, handle } = author;
-  return (
-    <span className="name-with-handle">
-    <span className="name">{name}</span>
-    <span className="handle">@{handle}</span>
-    </span>
-  );
+    return (
+      <span className="name-with-handle">
+      <span className="name">{name}</span>
+      <span className="handle">@{handle}</span>
+      </span>
+    );
 }
+NameWithHandle.propTypes = {
+    author: PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      handle: PropTypes.string.isRequired
+  }).isRequired
+};
 
 const Time = ({ time }) => {
   const timeString = moment(time).fromNow();
@@ -98,34 +101,18 @@ const RetweetButton = ({ count }) => (
 
 const LikeButton = ({ count }) => (
   <span className="like-button">
-  <i className="fa fa-heart"/>
-    {count > 0 &&
-  <span className="like-count">
-    {count}
-  </span>}
+    <i className="fa fa-heart"/>
+      {count > 0 && <span className="like-count"> {count}
+    </span>}
   </span>
 );
+
+LikeButton.propTypes = {
+  count: PropTypes.number
+};
 
 const MoreOptionsButton = () => (
   <i className="fa fa-ellipsis-h more-options-button"/>
 );
-
-function Comment({ author, message, likes }) {
-  return (
-    <div>
-    <div className='author'>{author}</div>
-    <div className='message'>{message}</div>
-    <div className='likes'>
-      {likes > 0 ? likes : 'No'} likes
-    </div>
-    </div>
-  );
-}
-
-Comment.propTypes = {
-  message: PropTypes.string.isRequired,
-  author: PropTypes.string.isRequired,
-  likes: PropTypes.number
-}
 
 ReactDOM.render(<Tweet tweet={testTweet}/>, document.querySelector('#root'));
